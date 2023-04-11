@@ -1,0 +1,20 @@
+[package]
+name = "maze"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[lib]
+name = "maze"
+crate-type = ["cdylib", "lib"]
+
+[features]
+no-entrypoint = []
+no-idl = []
+no-log-ix-name = []
+cpi = ["no-entrypoint"]
+default = []
+
+[dependencies]
+pyo3 = "0.18.1"
+rand = "*"

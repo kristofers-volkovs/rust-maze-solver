@@ -1,0 +1,12 @@
+[workspace]
+members = [
+    "lib/*",
+]
+
+[profile.release]
+overflow-checks = true
+lto = "fat"
+
+[profile.release.build-override]
+opt-level = 3
+incremental = false
