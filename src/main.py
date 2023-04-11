@@ -1,5 +1,6 @@
 import maze
 
+from maze_visualizer import MazeVisualizer
 
 def main():
     m = maze.Maze(10)
@@ -23,7 +24,8 @@ def main():
     for row in m.west:
         print(row)
 
-    pass
+    m_solver = maze.MazeSolver(m)
+
 
 if __name__ == '__main__':
     main()
