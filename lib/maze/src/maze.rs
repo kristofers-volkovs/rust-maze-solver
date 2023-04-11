@@ -3,6 +3,7 @@ use pyo3::prelude::*;
 #[pyclass]
 #[derive(Clone)]
 pub struct Maze {
+    #[pyo3(get, set)]
     n: usize, // dimension of maze
 
     #[pyo3(get, set)]
