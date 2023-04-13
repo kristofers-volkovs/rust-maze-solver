@@ -1,3 +1,4 @@
+import time
 import matplotlib
 
 matplotlib.use("TkAgg")
@@ -10,6 +11,8 @@ class MazeVisualizer():
         self.maze = maze
 
     def plot_maze(self):
+        start_time = time.time()
+
         _fig, ax = plt.subplots()
         m_size = self.maze.get_maze_len() + 1
 
@@ -34,6 +37,8 @@ class MazeVisualizer():
                     x = [col_idx, col_idx + 1]
                     y = [row_idx, row_idx]
                     ax.plot(x, y, color='black')
+
+        print(f"Maze plot time: {time.time() - start_time}")
 
         plt.tight_layout()
         plt.show()
