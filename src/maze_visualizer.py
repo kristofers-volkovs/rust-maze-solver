@@ -1,4 +1,5 @@
 import time
+import math
 import matplotlib
 
 matplotlib.use("TkAgg")
@@ -37,6 +38,24 @@ class MazeVisualizer():
                     x = [col_idx, col_idx + 1]
                     y = [row_idx, row_idx]
                     ax.plot(x, y, color='black')
+
+        start = self.maze.start
+        end = self.maze.end
+
+        dot_size = 200 / math.log(m_size)
+        ax.scatter(start[0] + 0.5, start[1] + 0.5, s=dot_size, color='r')
+        ax.scatter(end[0] + 0.5, end[1] + 0.5, s=dot_size, color='b')
+
+        solved_path = self.maze.get_solved_path()
+
+        path_x = []
+        path_y = []
+        for point in solved_path:
+            path_x.append(point[1] + 0.5)
+            path_y.append(point[0] + 0.5)
+
+        path_line_width = 12 / math.log(m_size)
+        ax.plot(path_x, path_y, lw=path_line_width, color='g')
 
         print(f"Maze plot time: {time.time() - start_time}")
 
