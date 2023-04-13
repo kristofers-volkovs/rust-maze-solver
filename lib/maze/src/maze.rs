@@ -1,19 +1,14 @@
 use pyo3::prelude::*;
 
+use super::wall_compass::WallCompass;
 #[pyclass]
 #[derive(Clone)]
 pub struct Maze {
     #[pyo3(get, set)]
     n: usize, // dimension of maze
 
-    #[pyo3(get, set)]
-    north: Vec<Vec<bool>>, // is there a wall to north of cell i, j
-    #[pyo3(get, set)]
-    east: Vec<Vec<bool>>, // and so forth...
-    #[pyo3(get, set)]
-    south: Vec<Vec<bool>>,
-    #[pyo3(get, set)]
-    west: Vec<Vec<bool>>,
+    wall_compass: WallCompass,
+    maze_solver: MazeSolver,
 
     #[pyo3(get, set)]
     visited: Vec<Vec<bool>>, // Use this array to register/query already visited cells
@@ -35,15 +30,10 @@ impl Maze {
             visited[n + 1][y] = true;
         }
 
-        let direction_vec = vec![vec![true; n + 2]; n + 2];
-
         let mut maze = Maze {
             n,
-            north: direction_vec.to_owned(),
-            east: direction_vec.to_owned(),
-            south: direction_vec.to_owned(),
-            west: direction_vec.to_owned(),
-            visited: visited,
+            wall_compass: WallCompass::new(n),
+            visited,
         };
 
         maze.generate(1, 1);
@@ -62,28 +52,48 @@ impl Maze {
             // pick random neighbor
             loop {
                 let r = rand::random::<f32>();
-                if r < 0.25 && !self.visited[x + 1][y] {
-                    self.south[x][y] = false;
-                    self.north[x + 1][y] = false;
-                    self.generate(x + 1, y);
-                    break;
-                } else if r >= 0.25 && r < 0.50 && !self.visited[x][y + 1] {
-                    self.east[x][y] = false;
-                    self.west[x][y + 1] = false;
+                if r < 0.25 && !self.visited[x][y + 1] {
+                    self.wall_compass.south[x][y + 1] = false;
+                    self.wall_compass.north[x][y] = false;
                     self.generate(x, y + 1);
                     break;
-                } else if r >= 0.5 && r < 0.75 && !self.visited[x - 1][y] {
-                    self.north[x][y] = false;
-                    self.south[x - 1][y] = false;
-                    self.generate(x - 1, y);
+                } else if r >= 0.25 && r < 0.50 && !self.visited[x + 1][y] {
+                    self.wall_compass.east[x][y] = false;
+                    self.wall_compass.west[x + 1][y] = false;
+                    self.generate(x + 1, y);
                     break;
-                } else if r >= 0.75 && r < 1.00 && !self.visited[x][y - 1] {
-                    self.west[x][y] = false;
-                    self.east[x][y - 1] = false;
+                } else if r >= 0.5 && r < 0.75 && !self.visited[x][y - 1] {
+                    self.wall_compass.north[x][y - 1] = false;
+                    self.wall_compass.south[x][y] = false;
                     self.generate(x, y - 1);
+                    break;
+                } else if r >= 0.75 && r < 1.00 && !self.visited[x - 1][y] {
+                    self.wall_compass.west[x][y] = false;
+                    self.wall_compass.east[x - 1][y] = false;
+                    self.generate(x - 1, y);
                     break;
                 }
             }
         }
     }
+    pub fn get_north(&self, row: usize, col: usize) -> bool {
+        self.wall_compass.north[row][col]
+    }
+
+    pub fn get_east(&self, row: usize, col: usize) -> bool {
+        self.wall_compass.east[row][col]
+    }
+
+    pub fn get_south(&self, row: usize, col: usize) -> bool {
+        self.wall_compass.south[row][col]
+    }
+
+    pub fn get_west(&self, row: usize, col: usize) -> bool {
+        self.wall_compass.west[row][col]
+    }
+
+    pub fn get_maze_len(&self) -> usize {
+        self.n
+    }
+    
 }
