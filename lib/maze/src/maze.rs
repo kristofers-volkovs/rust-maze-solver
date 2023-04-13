@@ -1,23 +1,26 @@
 use pyo3::prelude::*;
 
+use super::maze_solver::MazeSolver;
 use super::wall_compass::WallCompass;
+
 #[pyclass]
 #[derive(Clone)]
 pub struct Maze {
-    #[pyo3(get, set)]
     n: usize, // dimension of maze
 
     wall_compass: WallCompass,
     maze_solver: MazeSolver,
 
-    #[pyo3(get, set)]
+    start: (usize, usize),
+    end: (usize, usize),
+
     visited: Vec<Vec<bool>>, // Use this array to register/query already visited cells
 }
 
 #[pymethods]
 impl Maze {
     #[new]
-    pub fn new(n: usize) -> Maze {
+    pub fn new(n: usize, start: (usize, usize), end: (usize, usize)) -> Maze {
         let mut visited = vec![vec![false; n + 2]; n + 2];
 
         // initialize border cells as already visited
@@ -33,6 +36,9 @@ impl Maze {
         let mut maze = Maze {
             n,
             wall_compass: WallCompass::new(n),
+            maze_solver: MazeSolver::new(),
+            start,
+            end,
             visited,
         };
 
@@ -76,6 +82,12 @@ impl Maze {
             }
         }
     }
+
+    pub fn solve(&mut self) {
+        self.maze_solver
+            .solve_maze(&self.wall_compass, self.start, self.end);
+    }
+
     pub fn get_north(&self, row: usize, col: usize) -> bool {
         self.wall_compass.north[row][col]
     }
@@ -95,5 +107,8 @@ impl Maze {
     pub fn get_maze_len(&self) -> usize {
         self.n
     }
-    
+
+    pub fn get_solved_path(&self) -> Vec<(usize, usize)> {
+        self.maze_solver.get_solved_path()
+    }
 }
