@@ -108,6 +108,14 @@ impl Maze {
         self.n
     }
 
+    pub fn get_start(&self) -> (usize, usize) {
+        self.start
+    }
+
+    pub fn get_end(&self) -> (usize, usize) {
+        self.end
+    }
+
     pub fn get_solved_path(&self) -> Vec<(usize, usize)> {
         self.maze_solver.get_solved_path()
     }

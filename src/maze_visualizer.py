@@ -39,8 +39,8 @@ class MazeVisualizer():
                     y = [row_idx, row_idx]
                     ax.plot(x, y, color='black')
 
-        start = self.maze.start
-        end = self.maze.end
+        start = self.maze.get_start()
+        end = self.maze.get_end()
 
         dot_size = 200 / math.log(m_size)
         ax.scatter(start[0] + 0.5, start[1] + 0.5, s=dot_size, color='r')
