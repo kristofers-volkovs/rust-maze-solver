@@ -1,6 +1,6 @@
 # Labyrinth generator and solver
 
-TODO
+Algorytm has two parts: generation and solving. Maze gets generated randomly every time and then it can be solved using multi-threading.
 
 ## Dependencies
 
@@ -10,18 +10,21 @@ Since the programme is written in rust, it's necessary to set up the rust toolch
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 ```
 
-To create the histogram plot for the numbers it's necesarry to set up `conda` and install the `matplotlib` library.
+For maze rendering python is used so it's necessary to set up a `virtual environment` or use `conda`. Dependencies necessary for running the code are `matplotlib` and `maturin`.
 
-TODO
+## Useful commands
 
-## Programme execution
+Buiding and running the programme:
+```
+bash run.sh
+```
 
-To build the programme without running it use:
+Only building the rust library:
+```
+bash run.sh -b
+```
 
-`cargo build`
-
-To execute the programme use:
-
-`cargo run`
-
-TODO
+Formatting rust code in the `/lib` directory:
+```
+bash run.sh -f
+```
